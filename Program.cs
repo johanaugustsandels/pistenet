@@ -31,23 +31,31 @@ static byte[] ToByteArray(string str)
   return bytes.ToArray();
 }
 
+var amount = 500000;
+var from = "";
+var fee = 0;
+var timestamp = "1657292549";
 var to = "00B3D4EC5BF02E3D90DA8E6859CBBEB3BDD5CC54AAEEB3BAF1";
-var fee = 1000;
-var amount = 50;
-var timestamp = "1644789410";
 
 stream.Write(ToByteArray(to));
 stream.Write(BitConverter.GetBytes(fee));
 stream.Write(BitConverter.GetBytes(amount));
 stream.Write(BitConverter.GetBytes(ulong.Parse(timestamp)));
 
-Console.WriteLine(
-  string.Join(",", BitConverter.GetBytes(ulong.Parse(timestamp)))
-);
-
 stream.Flush();
 stream.Position = 0;
 
+var shabytes = sha256.ComputeHash(stream);
+
 Console.WriteLine(
-  AsString(sha256.ComputeHash(stream))
+  string.Join(",", shabytes)
+);
+
+var stream2 = new MemoryStream();
+stream2.Write(shabytes);
+stream2.Flush();
+stream2.Position = 0;
+
+Console.WriteLine(
+  AsString(sha256.ComputeHash(stream2))
 );

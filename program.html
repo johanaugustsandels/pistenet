@@ -3,6 +3,10 @@ async function sha256(data) {
   const buf = await crypto.subtle.digest("SHA-256", data);
   return Array.prototype.map.call(new Uint8Array(buf), x => (('00' + x.toString(16)).slice(-2))).join('').toUpperCase();;
 }
+async function sha256bytes(data) {
+  const buf = await crypto.subtle.digest("SHA-256", data);
+  return buf
+}
 
 const HexToArrayBuffer = (hex) => {
   return new Uint8Array(hex.match(/../g).map(h=>parseInt(h,16))).buffer
@@ -27,10 +31,13 @@ function arrayBufferConcat(/* arraybuffers */) {
   return arrayBuffer
 }
 
+// oikea: 075ae77a8a171c3508f04298eef9bc1d4b57cb5776a0a199059a4ed192b041af
+
+var amount = 500000;
+var from = "";
+var fee = 0;
+var timestamp = "1657292549";
 var to = "00B3D4EC5BF02E3D90DA8E6859CBBEB3BDD5CC54AAEEB3BAF1";
-var fee = 1000;
-var amount = 50;
-var timestamp = "1644789410";
 
 var parts = []
 parts.push(HexToArrayBuffer(to));
@@ -43,8 +50,16 @@ parts.push(IntToArrayBuffer(0));
 
 let data = arrayBufferConcat(...parts)
 
-sha256(data).then(data => {
+sha256bytes(data).then(data => {
   console.log(data)
+
+  var parts2 = []
+  parts2.push(data)
+
+  let data2 = arrayBufferConcat(...parts)
+  sha256(data2).then(data => {
+    console.log(data)
+  })
 })
 </script>
 
