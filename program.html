@@ -1,0 +1,27 @@
+<script>
+async function sha256(data) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(data));
+
+  return Array.prototype.map.call(new Uint8Array(buf), x => (('00' + x.toString(16)).slice(-2))).join('');
+}
+
+const HexToByteArray = (hex) => {
+  for (var bytes = [], c = 0; c < hex.length; c += 2)
+    bytes.push(parseInt(hex.substr(c, 2), 16));
+  console.log(bytes)
+  return bytes;
+}
+
+var to = "00B3D4EC5BF02E3D90DA8E6859CBBEB3BDD5CC54AAEEB3BAF1";
+var fee = 1000;
+var timestamp = "1644789410";
+
+var stream = []
+stream.push(HexToByteArray(to))
+
+sha256(stream).then(data => {
+  console.log(data)
+})
+</script>
+
+
