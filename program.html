@@ -1,25 +1,46 @@
 <script>
 async function sha256(data) {
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(data));
-
-  return Array.prototype.map.call(new Uint8Array(buf), x => (('00' + x.toString(16)).slice(-2))).join('');
+  const buf = await crypto.subtle.digest("SHA-256", data);
+  return Array.prototype.map.call(new Uint8Array(buf), x => (('00' + x.toString(16)).slice(-2))).join('').toUpperCase();;
 }
 
-const HexToByteArray = (hex) => {
-  for (var bytes = [], c = 0; c < hex.length; c += 2)
-    bytes.push(parseInt(hex.substr(c, 2), 16));
-  console.log(bytes)
-  return bytes;
+const HexToArrayBuffer = (hex) => {
+  return new Uint8Array(hex.match(/../g).map(h=>parseInt(h,16))).buffer
+}
+
+const IntToArrayBuffer = (int) => {
+  return new Int32Array([int]).buffer
+}
+function arrayBufferConcat(/* arraybuffers */) {
+  var arrays = [].slice.call(arguments)
+
+  var arrayBuffer = arrays.reduce(function(cbuf, buf, i) {
+    if (i === 0) return cbuf
+
+    var tmp = new Uint8Array(cbuf.byteLength + buf.byteLength)
+    tmp.set(new Uint8Array(cbuf), 0)
+    tmp.set(new Uint8Array(buf), cbuf.byteLength)
+
+    return tmp.buffer
+  }, arrays[0])
+
+  return arrayBuffer
 }
 
 var to = "00B3D4EC5BF02E3D90DA8E6859CBBEB3BDD5CC54AAEEB3BAF1";
 var fee = 1000;
+var amount = 50;
 var timestamp = "1644789410";
 
-var stream = []
-stream.push(HexToByteArray(to))
+var parts = []
+parts.push(HexToArrayBuffer(to));
+parts.push(IntToArrayBuffer(fee));
+parts.push(IntToArrayBuffer(amount));
+//parts.push(IntToArrayBuffer(parseInt(timestamp)));
 
-sha256(stream).then(data => {
+let data = arrayBufferConcat(...parts)
+
+sha256(data).then(data => {
   console.log(data)
 })
 </script>
