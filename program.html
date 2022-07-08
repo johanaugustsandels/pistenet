@@ -36,7 +36,10 @@ var parts = []
 parts.push(HexToArrayBuffer(to));
 parts.push(IntToArrayBuffer(fee));
 parts.push(IntToArrayBuffer(amount));
-//parts.push(IntToArrayBuffer(parseInt(timestamp)));
+
+// trolol
+parts.push(IntToArrayBuffer(parseInt(timestamp)));
+parts.push(IntToArrayBuffer(0));
 
 let data = arrayBufferConcat(...parts)
 

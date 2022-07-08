@@ -39,7 +39,11 @@ var timestamp = "1644789410";
 stream.Write(ToByteArray(to));
 stream.Write(BitConverter.GetBytes(fee));
 stream.Write(BitConverter.GetBytes(amount));
-//stream.Write(BitConverter.GetBytes(ulong.Parse(timestamp)));
+stream.Write(BitConverter.GetBytes(ulong.Parse(timestamp)));
+
+Console.WriteLine(
+  string.Join(",", BitConverter.GetBytes(ulong.Parse(timestamp)))
+);
 
 stream.Flush();
 stream.Position = 0;
