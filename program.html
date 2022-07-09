@@ -8,6 +8,10 @@ async function sha256bytes(data) {
   return buf
 }
 
+function sha256bytesToString(data) {
+  return Array.prototype.map.call(new Uint8Array(data), x => (('00' + x.toString(16)).slice(-2))).join('').toUpperCase();;
+}
+
 const HexToArrayBuffer = (hex) => {
   return new Uint8Array(hex.match(/../g).map(h=>parseInt(h,16))).buffer
 }
@@ -50,15 +54,15 @@ parts.push(IntToArrayBuffer(0));
 
 let data = arrayBufferConcat(...parts)
 
-sha256bytes(data).then(data => {
-  console.log(data)
+sha256bytes(data).then(ekahash => {
+  console.log("ekahash", sha256bytesToString(ekahash))
 
   var parts2 = []
-  parts2.push(data)
+  parts2.push(ekahash)
 
-  let data2 = arrayBufferConcat(...parts)
-  sha256(data2).then(data => {
-    console.log(data)
+  let data2 = arrayBufferConcat(...parts2)
+  sha256(data2).then(tokahash => {
+    console.log("finalhash", tokahash)
   })
 })
 </script>

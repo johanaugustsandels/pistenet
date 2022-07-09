@@ -48,7 +48,7 @@ stream.Position = 0;
 var shabytes = sha256.ComputeHash(stream);
 
 Console.WriteLine(
-  string.Join(",", shabytes)
+  "ekahash: " + AsString(shabytes)
 );
 
 var stream2 = new MemoryStream();
@@ -57,5 +57,5 @@ stream2.Flush();
 stream2.Position = 0;
 
 Console.WriteLine(
-  AsString(sha256.ComputeHash(stream2))
+  "tokahash: " + AsString(sha256.ComputeHash(stream2))
 );
